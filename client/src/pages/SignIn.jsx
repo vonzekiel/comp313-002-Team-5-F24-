@@ -49,8 +49,11 @@ function SignIn() {
   };
 
   return (
-    <div className="p-3 max-w-lg mx-auto">
+    <div className="p-3 max-w-lg mx-auto bg-white my-10">
       <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>
+      {error && (
+        <p className="text-red-500 mt-5 text-center font-bold">{error}</p>
+      )}
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -80,7 +83,6 @@ function SignIn() {
           <span className="text-blue-600">Sign up</span>
         </Link>
       </div>
-      {error && <p className="text-red-500 mt-5">{error}</p>}
     </div>
   );
 }
