@@ -1,6 +1,7 @@
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import MyListing from "../pages/MyListing";
 
 function Header() {
   const { currentUser } = useSelector((state) => state.user);
@@ -21,6 +22,13 @@ function Header() {
               Listings
             </li>
           </Link>
+          {isLoggedIn && (
+            <Link to="/my-listings">
+              <li className="hidden font-bold sm:inline text-white hover:underline">
+                My Listings
+              </li>
+            </Link>
+          )}
           <Link to="/about">
             <li className="hidden font-bold sm:inline text-white hover:underline">
               About
