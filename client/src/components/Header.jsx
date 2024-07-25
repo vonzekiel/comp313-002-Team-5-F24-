@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const isLoggedIn = !!(currentUser && currentUser.username);
-  console.log(isLoggedIn);
+
   return (
     <header className="bg-black shadow-md">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
