@@ -10,6 +10,9 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import { app } from "../firebase";
@@ -89,6 +92,23 @@ export default function Profile() {
     } catch (error) {
       dispatch(updateUserFailure(error.message));
       setUpdateError("An error occurred. Please try again later.");
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      dispatch(deleteUserSuccess());
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
     }
   };
 
@@ -184,11 +204,15 @@ export default function Profile() {
         </button>
       </form>
       <div className="flex justify-between mt-5">
-        <button className="bg-red-600 text-white p-3 rounded-md my-2 hover:opacity-95 disabled:opacity-70">
+        <button
+          className="bg-red-600 text-white p-3 rounded-md my-2 hover:opacity-95 disabled:opacity-70"
+          onClick={handleDeleteUser}
+        >
           Delete Account
         </button>
         {error && (
           <p className="text-red-500 mt-5 text-center font-bold">
+            {error}
             {updateError}
           </p>
         )}
