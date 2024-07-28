@@ -13,6 +13,9 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  logoutStart,
+  logoutFailure,
+  logoutSuccess,
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import { app } from "../firebase";
@@ -109,6 +112,21 @@ export default function Profile() {
       dispatch(deleteUserSuccess());
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      dispatch(logoutStart());
+      const res = await fetch("/api/auth/logout");
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(logoutFailure(data.message));
+        return;
+      }
+      dispatch(logoutSuccess(data));
+    } catch (error) {
+      dispatch(logoutFailure(error.message));
     }
   };
 
@@ -221,8 +239,11 @@ export default function Profile() {
             Account updated successfully!
           </p>
         )}
-        <button className="bg-red-600 text-white p-3 rounded-md my-2 hover:opacity-95 disabled:opacity-70">
-          Sign Out
+        <button
+          className="bg-red-600 text-white p-3 rounded-md my-2 hover:opacity-95 disabled:opacity-70"
+          onClick={handleLogout}
+        >
+          Log Out
         </button>
       </div>
     </div>
