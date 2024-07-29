@@ -1,4 +1,88 @@
+import { useState } from "react";
+import { app } from "../firebase";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+
+import Loading from "../components/Loading";
+
 function CreateListing() {
+  const [files, setFiles] = useState([]);
+  const [formData, setFormData] = useState({
+    imageUrls: [],
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState(null);
+
+  console.log(formData);
+  const handleUploadImages = () => {
+    if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
+      setIsLoading(true);
+      setImageUploadError(false);
+      const promises = [];
+
+      for (let i = 0; i < files.length; i++) {
+        promises.push(storeImage(files[i]));
+      }
+
+      Promise.all(promises)
+        .then((urls) => {
+          setFormData({
+            ...formData,
+            imageUrls: formData.imageUrls.concat(urls),
+          });
+          setImageUploadError(false);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          setImageUploadError(
+            "Image upload failed. Please only upload images that is below 2MB."
+          );
+          setIsLoading(false);
+          console.log(error);
+        });
+    } else {
+      setImageUploadError("Please upload up to 6 images only.");
+      setIsLoading(false);
+    }
+  };
+
+  const storeImage = async (file) => {
+    return new Promise((resolve, reject) => {
+      const storage = getStorage(app);
+      const fileName = new Date().getTime() + file.name;
+      const storageReg = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageReg, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Upload is ${progress}% done`);
+        },
+        (error) => {
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+            resolve(downloadUrl);
+          });
+        }
+      );
+    });
+  };
+
+  const handleDeleteImage = (index) => {
+    setFormData({
+      ...formData,
+      imageUrls: formData.imageUrls.filter((_, i) => i !== index),
+    });
+  };
+
   return (
     <main className="p-3 max-w-7xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
@@ -103,12 +187,43 @@ function CreateListing() {
               id="images"
               accept="image/*"
               multiple
+              onChange={(e) => setFiles(e.target.files)}
               className="p-3 border border-gray-300 rounded w-full shadow-md"
             />
-            <button className="border border-blue-700 text-blue-600 p-3 rounded-lg uppercase hover:drop-shadow-xl disabled:opacity-80">
-              Upload Images
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={handleUploadImages}
+              className="border border-blue-700 text-blue-600 p-3 rounded-lg uppercase hover:bg-blue-700 hover:text-white disabled:bg-blue-700"
+            >
+              {isLoading ? <Loading /> : "Upload Images"}
             </button>
           </div>
+          {formData.imageUrls.length > 0 &&
+            formData.imageUrls.map((url, index) => (
+              <div
+                className="flex justify-between p-3 border items-center"
+                key={url}
+              >
+                <img
+                  src={url}
+                  alt="uploaded image"
+                  className="w-25 h-20 object-contain rounded-lg shadow-md"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleDeleteImage(index)}
+                  className="border border-red-600 text-red-600 font-semibold rounded-md p-2 hover:bg-red-600 hover:text-white"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+          {imageUploadError && (
+            <p className="text-red-600 text-center text-sm uppercase">
+              {imageUploadError}
+            </p>
+          )}
           <button className="p-3 bg-blue-600 text-white rounded-lg shadow-lg">
             Create Listing
           </button>
