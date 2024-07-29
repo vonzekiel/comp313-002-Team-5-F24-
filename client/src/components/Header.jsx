@@ -29,11 +29,6 @@ function Header() {
               </li>
             </Link>
           )}
-          <Link to="/about">
-            <li className="hidden font-bold sm:inline text-white hover:underline">
-              About
-            </li>
-          </Link>
         </ul>
         <form className="bg-slate-100 p-3 rounded-lg flex items-center">
           <input
