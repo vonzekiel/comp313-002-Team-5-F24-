@@ -1,4 +1,5 @@
 import { FaBuilding, FaGlobe, FaHandsHelping } from "react-icons/fa";
+import ContactUs from "./ContactUs";
 
 const Home = () => {
   return (

@@ -1,17 +1,19 @@
-import { useState } from "react";
-import { app } from "../firebase";
+import { useEffect, useState } from "react";
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-
-import Loading from "../components/Loading";
+import { app } from "../firebase";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import Loading from "../components/Loading";
 
-function CreateListing() {
+export default function CreateListing() {
+  const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const params = useParams();
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
     imageUrls: [],
@@ -21,21 +23,33 @@ function CreateListing() {
     type: "rent",
     bedrooms: 1,
     bathrooms: 1,
-    price: 50,
+    regularPrice: 50,
+    discountPrice: 0,
     offer: false,
     parking: false,
     furnished: false,
   });
+  const [imageUploadError, setImageUploadError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [imageUploadError, setImageUploadError] = useState(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
-  const { currentUser } = useSelector((state) => state.user);
+  useEffect(() => {
+    const fetchListing = async () => {
+      const listingId = params.listingId;
+      const res = await fetch(`/api/listing/get/${listingId}`);
+      const data = await res.json();
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+      setFormData(data);
+    };
 
-  console.log(formData);
-  const handleUploadImages = () => {
+    fetchListing();
+  }, []);
+
+  const handleUploadImages = (e) => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
       setIsLoading(true);
       setImageUploadError(false);
@@ -44,7 +58,6 @@ function CreateListing() {
       for (let i = 0; i < files.length; i++) {
         promises.push(storeImage(files[i]));
       }
-
       Promise.all(promises)
         .then((urls) => {
           setFormData({
@@ -55,14 +68,11 @@ function CreateListing() {
           setIsLoading(false);
         })
         .catch((error) => {
-          setImageUploadError(
-            "Image upload failed. Please only upload images that is below 2MB."
-          );
+          setImageUploadError("Image upload failed (2 mb max per image)");
           setIsLoading(false);
-          console.log(error);
         });
     } else {
-      setImageUploadError("Please upload up to 6 images only.");
+      setImageUploadError("You can only upload 6 images per listing");
       setIsLoading(false);
     }
   };
@@ -71,9 +81,8 @@ function CreateListing() {
     return new Promise((resolve, reject) => {
       const storage = getStorage(app);
       const fileName = new Date().getTime() + file.name;
-      const storageReg = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageReg, file);
-
+      const storageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageRef, file);
       uploadTask.on(
         "state_changed",
         (snapshot) => {
@@ -85,8 +94,8 @@ function CreateListing() {
           reject(error);
         },
         () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-            resolve(downloadUrl);
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            resolve(downloadURL);
           });
         }
       );
@@ -124,12 +133,10 @@ function CreateListing() {
       e.target.type === "text" ||
       e.target.type === "textarea"
     ) {
-      {
-        setFormData({
-          ...formData,
-          [e.target.id]: e.target.value,
-        });
-      }
+      setFormData({
+        ...formData,
+        [e.target.id]: e.target.value,
+      });
     }
   };
 
@@ -138,9 +145,11 @@ function CreateListing() {
     try {
       if (formData.imageUrls.length < 1)
         return setError("You must upload at least one image");
+      if (+formData.regularPrice < +formData.discountPrice)
+        return setError("Discount price must be lower than regular price");
       setLoading(true);
       setError(false);
-      const res = await fetch("/api/listing/create-listing", {
+      const res = await fetch(`/api/listing/update/${params.listingId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -155,17 +164,16 @@ function CreateListing() {
       if (data.success === false) {
         setError(data.message);
       }
-      navigate(`/listing/${data._id}`);
+      navigate(`/my-listings`);
     } catch (error) {
       setError(error.message);
       setLoading(false);
     }
   };
-
   return (
-    <main className="p-3 max-w-7xl mx-auto h-screen mb-auto">
+    <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
-        Create Listing
+        Update a Listing
       </h1>
       <form className="flex flex-col sm:flex-row gap-6" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4 flex-1">
@@ -351,10 +359,10 @@ function CreateListing() {
             {loading ? (
               <span>
                 <Loading />
-                Creating...
+                Updating...
               </span>
             ) : (
-              "Create Listing"
+              "Update Listing"
             )}
           </button>
           {error && <p className="text-red-700 text-sm">{error}</p>}
@@ -363,5 +371,3 @@ function CreateListing() {
     </main>
   );
 }
-
-export default CreateListing;

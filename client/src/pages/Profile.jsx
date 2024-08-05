@@ -138,8 +138,8 @@ export default function Profile() {
   }, [image]);
 
   return (
-    <div className="p-3 max-w-lg mx-auto">
-      <h1 className="text-3xl font-bold text-center my-7">Account</h1>
+    <div className="p-3 max-w-lg mx-auto h-screen">
+      <h1 className="text-3xl font-bold text-center my-7">My Account</h1>
       <p className="text-center text-sm">
         {fileUploadError ? (
           <span className="text-red-700 font-semibold">
