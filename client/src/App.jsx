@@ -10,6 +10,8 @@ import MyListing from "./pages/MyListing";
 import CreateListing from "./pages/CreateListing";
 import UpdateListing from "./pages/UpdateListing";
 import ContactUs from "./pages/ContactUs";
+import Listing from "./pages/Listing";
+import Footer from "./components/Footer";
 export default function App() {
   return (
     <BrowserRouter>
@@ -28,8 +30,10 @@ export default function App() {
             element={<UpdateListing />}
           />
         </Route>
-        <Route path="/listings" element={<Listings />} />
+        <Route path="/listings/" element={<Listings />} />
+        <Route path="/listing/:listingId" element={<Listing />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

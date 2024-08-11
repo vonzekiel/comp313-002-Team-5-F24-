@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { signInSuccess } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-
+import Google from "../../public/assets/google.webp";
 function OAuth() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -42,14 +42,14 @@ function OAuth() {
   return (
     <button
       type="button"
-      className="bg-green-500 text-white p-3 rounded-lg uppercase hover:opacity-95"
+      className="w-full px-4 py-2 tracking-wide text-black transition-colors duration-300 transform bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50"
       onClick={handleGoogle}
     >
       {loading ? (
         <svg
           aria-hidden="true"
           role="status"
-          className="inline w-4 h-4 me-3 text-white animate-spin"
+          className="inline w-4 h-4 me-3 text-black animate-spin"
           viewBox="0 0 100 101"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -64,7 +64,11 @@ function OAuth() {
           />
         </svg>
       ) : (
-        "Login with google"
+        <img
+          src={Google}
+          alt="Google Sign-In"
+          className="inline mr-2 w-10 h-10"
+        />
       )}
     </button>
   );

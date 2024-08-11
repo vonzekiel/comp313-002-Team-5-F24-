@@ -14,7 +14,6 @@ function SignIn() {
   const { loading, error } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -50,40 +49,111 @@ function SignIn() {
   };
 
   return (
-    <div className="p-3 max-w-lg mx-auto bg-white my-10">
-      <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>
-      {error && (
-        <p className="text-red-500 mt-5 text-center font-bold">{error}</p>
-      )}
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Username"
-          className="border p-3 rounded-lg"
-          id="username"
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="border p-3 rounded-lg"
-          id="password"
-          onChange={handleChange}
-        />
-        <button
-          disabled={loading}
-          className="bg-teal-600 text-white p-3 rounded-lg uppercase hover:opacity-90 disabled:opacity-50"
+    <div className="bg-white dark:bg-gray-900">
+      <div className="flex justify-center h-screen">
+        <div
+          className="hidden bg-cover lg:block lg:w-2/3"
+          style={{
+            backgroundImage:
+              "url(https://images.unsplash.com/photo-1605146769289-440113cc3d00?q=80&w=3570&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
+          }}
         >
-          {loading && <Loading />}
-          {loading ? "Signing in.." : "Sign In"}
-        </button>
-        <OAuth />
-      </form>
-      <div className="flex gap-2 mt-5">
-        <p>Dont have an account?</p>
-        <Link to={"/sign-up"}>
-          <span className="text-blue-600">Sign up</span>
-        </Link>
+          <div className="flex items-center h-full px-20 bg-gray-900 bg-opacity-40">
+            <div>
+              <h2 className="text-2xl font-bold text-white sm:text-3xl">
+                Welcome Back!
+              </h2>
+              <p className="max-w-xl mt-3 text-gray-300">
+                Sign in to continue accessing your account and managing your
+                real estate listings and inquiries.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center w-full max-w-md px-6 mx-auto lg:w-2/6">
+          <div className="flex-1">
+            <div className="text-center">
+              <div className="flex justify-center mx-auto"></div>
+              <p className="mt-3 text-gray-500 dark:text-gray-300">
+                Sign in to access your account
+              </p>
+            </div>
+
+            <div className="mt-8">
+              {error && (
+                <p className="text-red-600 text-center mb-4">{error}</p>
+              )}
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                <div>
+                  <label
+                    htmlFor="username"
+                    className="block mb-2 text-sm text-gray-600 dark:text-gray-200"
+                  >
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    id="username"
+                    placeholder="Enter your username"
+                    className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div>
+                  <div className="flex justify-between mb-2">
+                    <label
+                      htmlFor="password"
+                      className="text-sm text-gray-600 dark:text-gray-200"
+                    >
+                      Password
+                    </label>
+                    <a
+                      href="#"
+                      className="text-sm text-gray-400 focus:text-blue-500 hover:text-blue-500 hover:underline"
+                    >
+                      Forgot password?
+                    </a>
+                  </div>
+
+                  <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50 disabled:opacity-50"
+                >
+                  {loading ? <Loading /> : "Sign In"}
+                </button>
+              </form>
+              <div className="my-6 flex items-center justify-center">
+                <div className="w-full h-px bg-gray-300"></div>
+                <p className="mx-4 text-sm text-gray-500 whitespace-nowrap">
+                  Or continue with
+                </p>
+                <div className="w-full h-px bg-gray-300"></div>
+              </div>
+              <OAuth />
+              <div className="flex justify-between items-center mt-6">
+                <p className="text-sm text-gray-600">Don't have an account?</p>
+                <Link
+                  to="/sign-up"
+                  className="text-sm text-blue-600 hover:underline"
+                >
+                  Sign up
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
