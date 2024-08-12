@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
-import { MdLocationOn } from "react-icons/md";
+import { MdLocationOn, MdFavorite, MdFavoriteBorder } from "react-icons/md";
 import PropTypes from "prop-types";
+import { useState } from "react";
 
-export default function ListingItem({ listing }) {
+export default function ListingItem({ listing, onFavoriteToggle, isFavorite }) {
+  const [isFavorited, setIsFavorited] = useState(isFavorite);
+
+  const handleFavoriteClick = () => {
+    setIsFavorited(!isFavorited);
+    onFavoriteToggle(listing._id);
+  };
+
   return (
-    <div className="w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800">
+    <div className="relative w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800">
       <Link to={`/listing/${listing._id}`}>
         <img
           src={listing.imageUrls[0]}
@@ -54,6 +62,17 @@ export default function ListingItem({ listing }) {
               : `${listing.bathrooms} bath `}
           </div>
         </div>
+
+        <button
+          onClick={handleFavoriteClick}
+          className="absolute top-3 right-3 text-red-500 hover:text-red-500"
+        >
+          {isFavorited ? (
+            <MdFavorite size={24} />
+          ) : (
+            <MdFavoriteBorder size={24} />
+          )}
+        </button>
       </div>
     </div>
   );
@@ -72,4 +91,6 @@ ListingItem.propTypes = {
     bedrooms: PropTypes.number.isRequired,
     bathrooms: PropTypes.number.isRequired,
   }).isRequired,
+  onFavoriteToggle: PropTypes.func.isRequired,
+  isFavorite: PropTypes.bool,
 };

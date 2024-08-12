@@ -1,52 +1,17 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ListingItem from "../components/ListingItem";
 
 export default function Listings() {
-  const navigate = useNavigate();
-  const [sidebardata, setSidebardata] = useState({
-    searchTerm: "",
-    type: "all",
-    parking: false,
-    furnished: false,
-    offer: false,
-    sort: "created_at",
-    order: "desc",
-  });
-
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
   const [showMore, setShowMore] = useState(false);
+  const [favorites, setFavorites] = useState(() => {
+    const savedFavorites = localStorage.getItem("favorites");
+    return savedFavorites ? JSON.parse(savedFavorites) : [];
+  });
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
-    const searchTermFromUrl = urlParams.get("searchTerm");
-    const typeFromUrl = urlParams.get("type");
-    const parkingFromUrl = urlParams.get("parking");
-    const furnishedFromUrl = urlParams.get("furnished");
-    const offerFromUrl = urlParams.get("offer");
-    const sortFromUrl = urlParams.get("sort");
-    const orderFromUrl = urlParams.get("order");
-
-    if (
-      searchTermFromUrl ||
-      typeFromUrl ||
-      parkingFromUrl ||
-      furnishedFromUrl ||
-      offerFromUrl ||
-      sortFromUrl ||
-      orderFromUrl
-    ) {
-      setSidebardata({
-        searchTerm: searchTermFromUrl || "",
-        type: typeFromUrl || "all",
-        parking: parkingFromUrl === "true" ? true : false,
-        furnished: furnishedFromUrl === "true" ? true : false,
-        offer: offerFromUrl === "true" ? true : false,
-        sort: sortFromUrl || "created_at",
-        order: orderFromUrl || "desc",
-      });
-    }
 
     const fetchListings = async () => {
       setLoading(true);
@@ -66,26 +31,6 @@ export default function Listings() {
     fetchListings();
   }, [location.search]);
 
-  const handleChange = (e) => {
-    const { id, value, checked } = e.target;
-    if (id === "all" || id === "rent" || id === "sale") {
-      setSidebardata({ ...sidebardata, type: id });
-    } else if (id === "searchTerm") {
-      setSidebardata({ ...sidebardata, searchTerm: value });
-    } else if (id === "parking" || id === "furnished" || id === "offer") {
-      setSidebardata({ ...sidebardata, [id]: checked });
-    } else if (id === "sort_order") {
-      const [sort, order] = value.split("_");
-      setSidebardata({ ...sidebardata, sort, order });
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const urlParams = new URLSearchParams(sidebardata);
-    navigate(`/search?${urlParams.toString()}`);
-  };
-
   const onShowMoreClick = async () => {
     const startIndex = listings.length;
     const urlParams = new URLSearchParams(location.search);
@@ -97,6 +42,15 @@ export default function Listings() {
       setShowMore(false);
     }
     setListings([...listings, ...data]);
+  };
+
+  const handleFavoriteToggle = (listingId) => {
+    const updatedFavorites = favorites.includes(listingId)
+      ? favorites.filter((id) => id !== listingId)
+      : [...favorites, listingId];
+
+    setFavorites(updatedFavorites);
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
 
   return (
@@ -113,7 +67,12 @@ export default function Listings() {
           )}
           {!loading &&
             listings.map((listing) => (
-              <ListingItem key={listing._id} listing={listing} />
+              <ListingItem
+                key={listing._id}
+                listing={listing}
+                onFavoriteToggle={handleFavoriteToggle}
+                isFavorite={favorites.includes(listing._id)}
+              />
             ))}
           {showMore && (
             <button
