@@ -2,7 +2,15 @@ import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
-// controller
+
+// Controller for user authentication and authorization
+
+/**
+ * Signup a new user.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
   const hashedPassword = bcryptjs.hashSync(password, 10);
@@ -15,6 +23,12 @@ export const signup = async (req, res, next) => {
   }
 };
 
+/**
+ * Signin an existing user.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
 export const signin = async (req, res, next) => {
   const { username, password } = req.body;
   try {
@@ -33,6 +47,12 @@ export const signin = async (req, res, next) => {
   }
 };
 
+/**
+ * Signin or signup a user using Google OAuth.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
 export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
@@ -71,12 +91,18 @@ export const google = async (req, res, next) => {
   }
 };
 
+/**
+ * Logout the current user.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
 export const logout = (req, res, next) => {
   try {
     res
       .clearCookie("access_token")
       .status(200)
-      .json({ message: "User has been log out!" });
+      .json({ message: "User has been logged out!" });
   } catch (error) {
     next(error);
   }

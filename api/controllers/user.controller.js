@@ -1,11 +1,27 @@
+/**
+ * Author: Von Manaois
+ */
+
 import bcryptjs from "bcryptjs";
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/error.js";
 import Listing from "../models/listing.model.js";
 
+/**
+ * Test API route.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ */
 export const test = (req, res) => {
   res.json({ message: "Api Route is working" });
 };
+
+/**
+ * Update user information.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
 export const updateUserInfo = async (req, res, next) => {
   if (req.user.id !== req.params.id) {
     return next(errorHandler(401, "Not authorized to update this user"));
@@ -38,6 +54,12 @@ export const updateUserInfo = async (req, res, next) => {
   }
 };
 
+/**
+ * Delete a user.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
 export const deleteUser = async (req, res, next) => {
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, "Not authorized to delete this user"));
@@ -51,6 +73,12 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 
+/**
+ * Get listings of a user.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
 export const getUserListings = async (req, res, next) => {
   if (req.user.id === req.params.id) {
     try {

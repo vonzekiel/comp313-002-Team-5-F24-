@@ -1,3 +1,12 @@
+/**
+ * Author: Von Manaois
+ *
+ * This module defines a middleware function for verifying JSON Web Tokens (JWT).
+ * It checks for the presence of a token in the request cookies and verifies it.
+ * If the token is valid, the user information is attached to the request object.
+ * If the token is missing or invalid, an appropriate error is passed to the next middleware.
+ */
+
 import { errorHandler } from "./error.js";
 import jwt from "jsonwebtoken";
 

@@ -1,3 +1,11 @@
+/**
+ * Author: Von Manaois
+ *
+ * This module defines the schema for a user using Mongoose.
+ * It includes fields such as username, email, password, and avatar.
+ * Each field is required and has specific constraints like uniqueness.
+ */
+
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(

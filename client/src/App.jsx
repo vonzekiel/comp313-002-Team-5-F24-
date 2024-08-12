@@ -1,3 +1,11 @@
+/**
+ * Author: Von Manaois
+ *
+ * This component sets up the main application routes using React Router.
+ * It includes routes for home, sign-in, sign-up, profile, listings, and more.
+ * Some routes are protected by a private route component that requires authentication.
+ */
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
@@ -12,6 +20,7 @@ import UpdateListing from "./pages/UpdateListing";
 import ContactUs from "./pages/ContactUs";
 import Listing from "./pages/Listing";
 import Footer from "./components/Footer";
+
 export default function App() {
   return (
     <BrowserRouter>

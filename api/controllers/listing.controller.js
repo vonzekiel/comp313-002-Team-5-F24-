@@ -1,5 +1,11 @@
 import Listing from "../models/listing.model.js";
 
+/**
+ * Create a new listing.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
 export const createListing = async (req, res, next) => {
   try {
     const listing = await Listing.create(req.body);
@@ -9,6 +15,12 @@ export const createListing = async (req, res, next) => {
   }
 };
 
+/**
+ * Delete an existing listing.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
 export const deleteListing = async (req, res, next) => {
   const listing = await Listing.findById(req.params.id);
 
@@ -28,6 +40,12 @@ export const deleteListing = async (req, res, next) => {
   }
 };
 
+/**
+ * Update an existing listing.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
 export const updateListing = async (req, res, next) => {
   const listing = await Listing.findById(req.params.id);
   if (!listing) {
@@ -49,6 +67,12 @@ export const updateListing = async (req, res, next) => {
   }
 };
 
+/**
+ * Get a single listing by ID.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
 export const getListing = async (req, res, next) => {
   try {
     const listing = await Listing.findById(req.params.id);
@@ -61,6 +85,12 @@ export const getListing = async (req, res, next) => {
   }
 };
 
+/**
+ * Get multiple listings with optional filters and pagination.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
 export const getListings = async (req, res, next) => {
   try {
     const limit = parseInt(req.query.limit) || 9;

@@ -1,3 +1,11 @@
+/**
+ * Author: Von Manaois
+ *
+ * This module defines the schema for a real estate listing using Mongoose.
+ * It includes various fields such as name, description, address, price, and more.
+ * Each field is required and has a specific data type.
+ */
+
 import mongoose from "mongoose";
 
 const listingSchema = new mongoose.Schema(
