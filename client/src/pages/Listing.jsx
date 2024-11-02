@@ -2,13 +2,14 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import { MdLocationOn } from "react-icons/md";
 
 function Listing() {
   const [listing, setListing] = useState({});
   const params = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -37,10 +38,16 @@ function Listing() {
     slidesToScroll: 1,
     adaptiveHeight: true,
   };
-  console.log(listing.owner);
+
   return (
     <section className="bg-gray-900 text-white">
       <div className="container px-6 py-10 mx-auto">
+        <button
+          onClick={() => navigate(-1)}
+          className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+        >
+          Go Back
+        </button>
         <div className="lg:flex lg:items-center">
           <div className="lg:w-1/2">
             <Slider {...settings}>
