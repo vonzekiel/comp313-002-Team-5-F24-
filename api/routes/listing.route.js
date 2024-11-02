@@ -13,6 +13,8 @@ import {
   updateListing,
   getListing,
   getListings,
+  addReview,
+  getReviews,
 } from "../controllers/listing.controller.js";
 import { verifyToken } from "../utils/verifyUser.js";
 
@@ -33,4 +35,9 @@ router.get("/get/:id", getListing);
 // Route for retrieving multiple listings
 router.get("/get", getListings);
 
+// Route for adding a review to a listing (unprotected)
+router.post("/:id/reviews", addReview);
+
+// Route for retrieving reviews for a listing
+router.get("/:id/reviews", getReviews);
 export default router;

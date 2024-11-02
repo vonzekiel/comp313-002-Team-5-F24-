@@ -1,4 +1,5 @@
 import Listing from "../models/listing.model.js";
+import { errorHandler } from "../utils/error.js";
 
 /**
  * Create a new listing.
@@ -137,6 +138,56 @@ export const getListings = async (req, res, next) => {
       .skip(startIndex);
 
     return res.status(200).json(listings);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Add a review to a listing.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
+export const addReview = async (req, res, next) => {
+  try {
+    const { user, rating, comment } = req.body;
+    const listing = await Listing.findById(req.params.id);
+
+    if (!listing) {
+      return next(errorHandler(404, "Listing not found!"));
+    }
+
+    const review = {
+      user,
+      rating,
+      comment,
+    };
+
+    listing.reviews.push(review);
+    await listing.save();
+
+    res.status(201).json({ message: "Review added!" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get reviews for a listing.
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ */
+export const getReviews = async (req, res, next) => {
+  try {
+    const listing = await Listing.findById(req.params.id);
+
+    if (!listing) {
+      return next(errorHandler(404, "Listing not found!"));
+    }
+
+    res.status(200).json(listing.reviews);
   } catch (error) {
     next(error);
   }

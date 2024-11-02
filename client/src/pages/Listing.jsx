@@ -3,16 +3,24 @@ import "slick-carousel/slick/slick-theme.css";
 
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import Slider from "react-slick";
 import { MdLocationOn } from "react-icons/md";
 
 function Listing() {
   const [listing, setListing] = useState({});
+  const [reviews, setReviews] = useState([]);
+  const [newReview, setNewReview] = useState({
+    user: "",
+    rating: 0,
+    comment: "",
+  });
+  const { currentUser } = useSelector((state) => state.user);
   const params = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchListing = async () => {
+    const fetchData = async () => {
       const listingId = params.listingId;
       const res = await fetch(`/api/listing/get/${listingId}`);
       const data = await res.json();
@@ -21,10 +29,47 @@ function Listing() {
         return;
       }
       setListing(data);
+
+      const reviewsRes = await fetch(`/api/listing/${listingId}/reviews`);
+      const reviewsData = await reviewsRes.json();
+      setReviews(reviewsData);
     };
 
-    fetchListing();
+    fetchData();
   }, [params.listingId]);
+
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+    if (!currentUser) {
+      alert("You must be logged in to submit a review.");
+      return;
+    }
+
+    const listingId = params.listingId;
+    const token = localStorage.getItem("token");
+
+    const reviewData = {
+      ...newReview,
+      user: currentUser.username, // Use currentUser's name
+    };
+
+    const res = await fetch(`/api/listing/${listingId}/reviews`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(reviewData),
+    });
+
+    const data = await res.json();
+    if (data.message === "Review added!") {
+      setReviews([...reviews, reviewData]);
+      setNewReview({ user: "", rating: 0, comment: "" });
+    } else {
+      alert(data.message);
+    }
+  };
 
   if (!listing.name) {
     return <div>Loading...</div>;
@@ -153,6 +198,83 @@ function Listing() {
                 ></iframe>
               </div>
             </div>
+          </div>
+        </section>
+        <section className="bg-gray-900 text-white mt-12">
+          <div className="container px-6 py-12 mx-auto">
+            <h2 className="text-2xl font-semibold mb-4">Reviews</h2>
+            <div className="flex flex-col gap-4">
+              {reviews.length === 0 && (
+                <p className="text-slate-400">No reviews yet.</p>
+              )}
+              {reviews.map((review, index) => (
+                <div key={index} className="p-4 bg-gray-800 rounded-lg">
+                  <div className="flex items-center mb-2">
+                    <span className="text-yellow-500">
+                      {"★".repeat(review.rating)}
+                      {"☆".repeat(5 - review.rating)}
+                    </span>
+                    <span className="ml-2 text-sm text-gray-400">
+                      {review.user}
+                    </span>
+                  </div>
+                  <p className="text-gray-300">{review.comment}</p>
+                </div>
+              ))}
+            </div>
+            {currentUser && (
+              <form onSubmit={handleReviewSubmit} className="mt-6">
+                <h3 className="text-xl font-semibold mb-2">Add a Review</h3>
+                <div className="flex flex-col gap-4">
+                  <input
+                    type="hidden"
+                    name="user"
+                    value={currentUser.username}
+                  />
+                  <div>
+                    <label className="block mb-2">Rating</label>
+                    <select
+                      name="rating"
+                      value={newReview.rating}
+                      onChange={(e) =>
+                        setNewReview({ ...newReview, rating: e.target.value })
+                      }
+                      className="p-2 rounded-lg border border-gray-300 bg-white dark:bg-gray-700 dark:text-white w-full"
+                    >
+                      <option value="0">Select Rating</option>
+                      <option value="1">1 - Poor</option>
+                      <option value="2">2 - Fair</option>
+                      <option value="3">3 - Good</option>
+                      <option value="4">4 - Very Good</option>
+                      <option value="5">5 - Excellent</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block mb-2">Comment</label>
+                    <textarea
+                      name="comment"
+                      value={newReview.comment}
+                      onChange={(e) =>
+                        setNewReview({ ...newReview, comment: e.target.value })
+                      }
+                      className="p-2 rounded-lg border border-gray-300 bg-white dark:bg-gray-700 dark:text-white w-full"
+                      rows="4"
+                    ></textarea>
+                  </div>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                  >
+                    Submit Review
+                  </button>
+                </div>
+              </form>
+            )}
+            {!currentUser && (
+              <p className="mt-6 text-red-500">
+                You must be logged in to submit a review.
+              </p>
+            )}
           </div>
         </section>
       </div>
