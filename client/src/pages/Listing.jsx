@@ -239,7 +239,7 @@ function Listing() {
                       onChange={(e) =>
                         setNewReview({ ...newReview, rating: e.target.value })
                       }
-                      className="p-2 rounded-lg border border-gray-300 bg-white dark:bg-gray-700 dark:text-white w-full"
+                      className="p-2 rounded-lg border border-gray-900 bg-white dark:bg-gray-700 text-gray-900 dark:text-white w-full"
                     >
                       <option value="0">Select Rating</option>
                       <option value="1">1 - Poor</option>
@@ -257,7 +257,7 @@ function Listing() {
                       onChange={(e) =>
                         setNewReview({ ...newReview, comment: e.target.value })
                       }
-                      className="p-2 rounded-lg border border-gray-300 bg-white dark:bg-gray-700 dark:text-white w-full"
+                      className="p-2 rounded-lg border border-gray-300 bg-white dark:bg-gray-700 text-gray-900 dark:text-white w-full"
                       rows="4"
                     ></textarea>
                   </div>

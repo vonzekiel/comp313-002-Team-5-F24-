@@ -140,13 +140,13 @@ export default function Profile() {
 
   return (
     <div
-      className="relative bg-cover bg-center bg-no-repeat h-screen flex"
+      className="relative bg-cover bg-center bg-no-repeat h-screen flex flex-col md:flex-row"
       style={{
         backgroundImage:
           "url(https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=3570&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
       }}
     >
-      <div className="flex-1 flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center md:p-0">
         <div className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-lg w-full max-w-md">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -272,7 +272,7 @@ export default function Profile() {
           </div>
         </div>
       </div>
-      <div className="w-1/2 bg-gray-900 text-white p-8">
+      <div className="w-full md:w-1/2  bg-gray-900 text-white p-8 md:p-8">
         <h2 className="text-2xl font-semibold mb-4">Profile Overview</h2>
 
         <div className="w-full max-w-xs mx-auto">

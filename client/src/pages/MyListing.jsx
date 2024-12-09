@@ -66,22 +66,22 @@ export default function MyListing() {
     fetchFavoriteListings();
   }, [favorites]);
 
-  // Handle favorite toggle (add/remove from favorites)
-  const handleFavoriteToggle = (listingId) => {
-    const updatedFavorites = favorites.includes(listingId)
-      ? favorites.filter((id) => id !== listingId) // Remove if exists
-      : [...favorites, listingId]; // Add if not exists
+  // // Handle favorite toggle (add/remove from favorites)
+  // const handleFavoriteToggle = (listingId) => {
+  //   const updatedFavorites = favorites.includes(listingId)
+  //     ? favorites.filter((id) => id !== listingId) // Remove if exists
+  //     : [...favorites, listingId]; // Add if not exists
 
-    setFavorites(updatedFavorites);
-    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+  //   setFavorites(updatedFavorites);
+  //   localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
 
-    // Remove listing from favorite listings if unfavorited
-    if (!updatedFavorites.includes(listingId)) {
-      setFavoriteListings((prevFavorites) =>
-        prevFavorites.filter((listing) => listing._id !== listingId)
-      );
-    }
-  };
+  //   // Remove listing from favorite listings if unfavorited
+  //   if (!updatedFavorites.includes(listingId)) {
+  //     setFavoriteListings((prevFavorites) =>
+  //       prevFavorites.filter((listing) => listing._id !== listingId)
+  //     );
+  //   }
+  // };
 
   const handleListingDelete = async (listingId) => {
     try {
@@ -189,7 +189,7 @@ export default function MyListing() {
         )}
       </div>
 
-      {/* Favorites Section */}
+      {/* Favorites Section
       <h2 className="text-2xl font-bold text-center text-white mb-6 mt-10">
         Favorites
       </h2>
@@ -209,7 +209,7 @@ export default function MyListing() {
             />
           ))
         )}
-      </div>
+      </div> */}
     </div>
   );
 }
