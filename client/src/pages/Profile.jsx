@@ -140,7 +140,8 @@ export default function Profile() {
 
   return (
     <div
-      className="relative bg-cover bg-center bg-no-repeat h-screen flex flex-col md:flex-row"
+      className="relative bg-cover bg-center bg-no-repeat h-screen flex flex-col
+       md:flex-row"
       style={{
         backgroundImage:
           "url(https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=3570&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
@@ -298,12 +299,12 @@ export default function Profile() {
         </div>
         <section className="bg-white dark:bg-gray-900">
           <div className="container flex flex-col items-center px-4 py-12 mx-auto text-center">
-            <h2 className="max-w-2xl mx-auto text-2xl font-semibold tracking-tight text-gray-800 xl:text-3xl dark:text-white">
+            <h2 className="max-w-2xl mx-auto text-2xl font-semibold tracking-tight text-gray-800 xl:text-3xl dark:text-white hidden md:block">
               Bring your Real Estate Venture to the{" "}
               <span className="text-blue-500">next level.</span>
             </h2>
 
-            <p className="max-w-4xl mt-6 text-center text-gray-500 dark:text-gray-300">
+            <p className="max-w-4xl mt-6 text-center text-gray-500 dark:text-gray-300 hidden md:block">
               Whether you are a buyer looking for your dream home or a seller
               aiming to get the best value, we are here to assist you every step
               of the way.

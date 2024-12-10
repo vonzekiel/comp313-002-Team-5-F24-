@@ -70,7 +70,7 @@ function ContactUs() {
         <div className="flex flex-col min-h-screen bg-black/60">
           <div className="container flex flex-col flex-1 px-6 py-12 mx-auto">
             <div className="flex-1 lg:flex lg:items-center lg:-mx-6">
-              <div className="text-white lg:w-1/2 lg:mx-6">
+              <div className="text-white lg:w-1/2 lg:mx-6 hidden md:block">
                 <h1 className="text-2xl font-semibold capitalize lg:text-3xl">
                   Your Ultimate Real Estate Partner
                 </h1>
@@ -83,7 +83,7 @@ function ContactUs() {
                   today.
                 </p>
 
-                <div className="mt-6 md:mt-8">
+                <div className="mt-6 md:mt-8 hidden md:block">
                   <h3 className="text-gray-300">Follow us</h3>
 
                   <div className="flex mt-4 -mx-1.5">
@@ -230,7 +230,7 @@ function ContactUs() {
           </div>
         </div>
       </section>
-      <section className="bg-white dark:bg-gray-900">
+      <section className="bg-white dark:bg-gray-900 hidden md:block">
         <div className="container px-6 py-12 mx-auto">
           <h1 className="text-2xl font-semibold text-gray-800 lg:text-3xl dark:text-white">
             Frequently Asked Questions
